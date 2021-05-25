@@ -1,0 +1,13 @@
+version: "2.1"
+services:
+    quizmaster:
+        image: quizmaster-docker:0.1
+        container_name: quizmaster
+        environment:
+          - PUID=1000
+          - PGID=1000
+        volumes:
+          - /quizmaster/app/conf:/app/conf
+        ports:
+          - 9000:9000
+        restart: unless-stopped

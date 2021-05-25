@@ -1,0 +1,52 @@
+FROM debian:buster-slim
+# MongoDB
+RUN export DEBIAN_FRONTEND=noninteractive; \
+    apt-get update && \
+	apt-get install -y \
+		wget \
+		gnupg && \
+	wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add - && \
+	echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main" \
+		| tee /etc/apt/sources.list.d/mongodb-org-4.2.list && \
+	apt-get update && \
+	apt-get install -y \
+		mongodb-org && \
+	sed -i "s,\\(^[[:blank:]]*bindIp:\\) .*,\\1 0.0.0.0," /etc/mongod.conf
+# Mollusc
+RUN export DEBIAN_FRONTEND=noninteractive; \
+	apt-get update && \
+	apt-get install -y \
+		git \
+		libjpeg-dev \
+		python-dev \
+		python-pip \
+		python-numpy \
+		python-matplotlib \
+		geoip-database \
+		supervisor && \
+	git clone https://github.com/kevthehermit/mollusc && \
+	cd mollusc && \
+	pip install \
+		maxminddb==1.5.4 \
+		django==1.10 \
+		wordcloud==1.2.1 \
+		pillow==4.0.0 \
+		matplotlib==2.0.0 \
+		python-dateutil \
+		pymongo \
+		numpy \
+		shodan \
+		geoip2 && \
+	cp mollusc.conf.sample mollusc.conf && \
+	python manage.py migrate
+# Getting entrypoint and supervisor config
+RUN \
+	wget -qO /entrypoint.sh https://gist.githubusercontent.com/Lanjelin/60014397185a37f57067172f362d90ea/raw/2410a65ab07d4bad2cc2b611f4e900d5369913f7/entrypoint-mollusc.sh && \
+	chmod +x entrypoint.sh && \
+	wget -qO /supervisord.conf https://gist.githubusercontent.com/Lanjelin/60014397185a37f57067172f362d90ea/raw/63e8fcdebe034aa9f45b31ff308c0de9ce3b54ef/supervisord-mollusc.conf && \
+	mv supervisord.conf /etc/supervisor/conf.d/supervisord.conf 	
+
+
+EXPOSE 22 23 8080 27017
+VOLUME /var/lib/mongodb
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]

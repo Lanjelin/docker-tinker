@@ -1,0 +1,15 @@
+version: '3'
+services:
+  mollusc:
+    image: mollusc:0.5
+    container_name: mollusc
+    environment:
+      - MAXMINKEY= #maxmindb key required
+      - GOOGLEKEY= #google api key required
+      - SHODANKEY= #optional
+    volumes:
+      - /conf/mongodb:/var/lib/mongodb
+    ports:
+      - 8080:8080
+      - 27017:27017
+    restart: unless-stopped

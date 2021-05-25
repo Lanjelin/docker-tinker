@@ -1,0 +1,42 @@
+#FROM alpine:latest
+FROM openjdk:8-jdk-alpine
+LABEL maintainer="Lanjelin"
+RUN \
+    echo "***** install build packages *****" && \
+    apk update && \
+    apk add --no-cache \
+        curl \
+        bash \
+        git \
+        make \
+        gcc \
+        build-base && \
+    echo "***** installing runtime packages *****" && \
+    mkdir app && \
+    curl -s https://api.github.com/repos/nymanjens/quizmaster/releases/latest \
+        | grep browser_download_url \
+        | cut -d '"' -f 4 \
+        | xargs wget -qO /app/quizmaster.tar.gz && \
+    tar -xzf /app/quizmaster.tar.gz -C app && \
+    echo 'pidfile.path = "/dev/null"' >> /app/conf/application.conf && \
+    mv /app/conf /app/conf-bk && \
+    mkdir /app/conf && \
+    mkdir entry && \
+    wget -qO /entry/entrypoint.sh https://gist.githubusercontent.com/Lanjelin/d1a5a44caaad70dd67303cc1eafa10d9/raw/3e49df2d94bd2958fb7014014637fd5168600d47/entrypoint-quizmaster.sh && \
+    chmod +x /entry/entrypoint.sh && \
+    echo "0:0" > /entry/perm.txt && \
+    git clone https://github.com/ncopa/su-exec.git /entry/su-exec && \
+    cd /entry/su-exec && make && \
+    echo "***** cleaning up ******" && \
+    apk del \
+        curl \
+        git \
+        make \
+        gcc \
+        build-base && \
+    rm /app/Dockerfile \
+       /app/quizmaster.tar.gz
+       
+EXPOSE 9000
+VOLUME /app/conf
+ENTRYPOINT ["/bin/bash", "/entry/entrypoint.sh"]

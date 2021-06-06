@@ -15,6 +15,8 @@ if [[ $PUID =~ $re ]] && [[ $PUID != $LUID ]] ; then
     echo "$PUID:$LGID" > perm.txt
     UPD=1
 fi
+LUID=$(cat /entry/perm.txt | awk '{split($0,a,":");print a[1]}')
+LGID=$(cat /entry/perm.txt | awk '{split($0,a,":");print a[2]}')
 if [[ $PGID =~ $re ]] && [[ $PGID != $LGID ]] ; then
     echo "$LUID:$PGID" > perm.txt
     UPD=1

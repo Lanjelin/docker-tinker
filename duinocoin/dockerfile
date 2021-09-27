@@ -1,0 +1,13 @@
+FROM python:3.8.0-slim
+LABEL maintainer="Lanjelin"
+RUN export DEBIAN_FRONTEND=noninteractive; \
+	apt-get update && \
+	apt-get install -y \
+		git && \
+	git clone https://github.com/revoxhere/duino-coin && \
+	cd duino-coin && \
+	python3 -m pip install -r requirements.txt && \
+	mkdir "Duino-Coin PC Miner 2.73" && \
+	mkdir "Duino-Coin AVR Miner 2.73"
+EXPOSE 9000
+ENTRYPOINT ["tail", "-f", "/dev/null"]

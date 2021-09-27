@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+    duinotestAVR:
+        container_name: duinotestAVR
+        image: duinotest:latest
+        ports:
+          - "9090:9000"
+        restart: unless-stopped
+        devices:
+          - "/dev/ttyUSB0:/dev/ttyUSB0"
+          - "/dev/ttyUSB1:/dev/ttyUSB1"
+          - "/dev/ttyUSB2:/dev/ttyUSB2"
+          - "/dev/ttyUSB3:/dev/ttyUSB3"
+          - "/dev/ttyACM0:/dev/ttyACM0"
+          - "/dev/ttyACM1:/dev/ttyACM1"
+          
+    duinotestPC:
+        container_name: duinotestPC
+        image: duinotest:latest
+        ports:
+          - "9091:9000"
+        restart: unless-stopped
+        environment:
+          username: lanjelin
+          threads: 4
+          intensity: 100
+          diff: LOW
+          ident: DockerPi4

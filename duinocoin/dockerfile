@@ -1,13 +1,14 @@
 FROM python:3.8.0-slim
 LABEL maintainer="Lanjelin"
 RUN export DEBIAN_FRONTEND=noninteractive; \
-	apt-get update && \
-	apt-get install -y \
-		git && \
-	git clone https://github.com/revoxhere/duino-coin && \
-	cd duino-coin && \
-	python3 -m pip install -r requirements.txt && \
-	mkdir "Duino-Coin PC Miner 2.73" && \
-	mkdir "Duino-Coin AVR Miner 2.73"
-EXPOSE 9000
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+    apt-get update && \
+    apt-get install -y \
+        gcc \
+        git \
+        wget && \
+    git clone https://github.com/revoxhere/duino-coin && \
+    wget -qO /entrypoint.sh https://raw.githubusercontent.com/Lanjelin/docker-tinker/main/duinocoin/entrypoint.sh && \
+    chmod +x entrypoint.sh && \
+    cd duino-coin && \
+    python3 -m pip install -r requirements.txt
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]

@@ -2,10 +2,10 @@ version: "3.9"
 services:
     DuinoCoinAVR:
         container_name: DuinoCoinAVR
-        image: duinocoin:latest
+        image: lasvanes/duinocoin
         restart: unless-stopped
         environment:
-          username: lanjelin
+          username: DockerDuco
           ident: DockerUNO
           mode: AVR
           devices: /dev/ttyUSB0,/dev/ttyUSB1,/dev/ttyUSB2,/dev/ttyUSB3,/dev/ttyACM0,/dev/ttyACM1
@@ -18,10 +18,10 @@ services:
           - "/dev/ttyACM1:/dev/ttyACM1"
     DuinoCoinPC:
         container_name: DuinoCoinPC
-        image: duinocoin:latest
+        image: lasvanes/duinocoin
         restart: unless-stopped
         environment:
-          username: lanjelin
+          username: DockerDuco
           threads: 4
           intensity: 100
           diff: LOW

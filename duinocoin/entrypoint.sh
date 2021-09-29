@@ -8,7 +8,8 @@ if ! [ -e /versions ]; then
     echo "${avrver}-${pcver}" > versions
     
     # Removing terminal title from AVR code, as it doesnt work with docker logs.
-    sed -i "s/\\\33]0\;//" /duino-coin/AVR_Miner.py
+    sed -i "s/print('\\\33]0;' + title + '\\\a', end='')//" /duino-coin/AVR_Miner.py
+    #sed -i "s/\\\33]0\;//" /duino-coin/AVR_Miner.py
 fi
 AVR=$(cat /versions | awk '{split($0,a,"-");print a[1]}')
 PC=$(cat /versions | awk '{split($0,a,"-");print a[1]}')

@@ -6,7 +6,7 @@ version: "3.9"
 services:
     DuinoCoinAVR:
         container_name: DuinoCoinAVR
-        image: lasvanes/duinocoin
+        image: lanjelin/duinocoin
         restart: unless-stopped
         environment:
           username: DockerDuco
@@ -22,7 +22,7 @@ services:
           - "/dev/ttyACM1:/dev/ttyACM1"
     DuinoCoinPC:
         container_name: DuinoCoinPC
-        image: lasvanes/duinocoin
+        image: lanjelin/duinocoin
         restart: unless-stopped
         environment:
           username: DockerDuco

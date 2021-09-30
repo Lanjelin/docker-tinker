@@ -3,3 +3,6 @@ dockerfile and docker-compose.yml based on [nymanjens/quizmaster](https://github
 
 ## mollusc + mongodb
 An attempt to make [kevthehermit/mollusc](https://github.com/kevthehermit/mollusc) work, and it somewhat does. Includes an instance of mongodb for use with [cowrie/cowrie](https://github.com/cowrie/cowrie). `cowrie.cfg` is to be configured to connect to the mongodb instance in this container (no authentication), and requires `pip install pymongo`.
+
+## duinocoin
+Because, why not? Duino mining using docker. Supports both AVR and PC, all configuration done using environment variables.

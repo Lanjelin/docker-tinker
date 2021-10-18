@@ -12,7 +12,7 @@ if ! [ -e /versions ]; then
     #sed -i "s/\\\33]0\;//" /duino-coin/AVR_Miner.py
 fi
 AVR=$(cat /versions | awk '{split($0,a,"-");print a[1]}')
-PC=$(cat /versions | awk '{split($0,a,"-");print a[1]}')
+PC=$(cat /versions | awk '{split($0,a,"-");print a[2]}')
 
 # Common Vars
 if [ -z ${username} ]; then username=DockerDuco; fi

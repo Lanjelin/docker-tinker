@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  openaudible:
+    container_name: openaudible
+    image: openaudible
+    ports:
+      - "3000:3000"
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./config/openaudible:/config/OpenAudible
+    # Following is a working traefik config with authelia authentication.
+    # Skip the next lines if you're not using traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openaudible.entrypoints=websecure"
+      - "traefik.http.routers.openaudible.rule=Host(`openaudible.example.com`)"
+      - "traefik.http.routers.openaudible.middlewares=authelia@docker"
+      - "traefik.http.routers.openaudible.service=openaudible"
+      - "traefik.http.services.openaudible.loadbalancer.server.port=3000"
+      - "traefik.http.services.openaudible.loadbalancer.server.scheme=http"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

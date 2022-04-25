@@ -9,7 +9,7 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - ./config/openaudible:/config/OpenAudible
+      - ./config/openaudible:/config
     # Following is a working traefik config with authelia authentication.
     # Skip the next lines if you're not using traefik
     labels:

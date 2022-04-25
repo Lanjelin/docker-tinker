@@ -15,4 +15,3 @@ RUN echo "Installing dependencies" && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 3000
-VOLUME /config/OpenAudible

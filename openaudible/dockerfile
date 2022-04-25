@@ -3,7 +3,7 @@ FROM ghcr.io/linuxserver/baseimage-rdesktop-web:bionic
 LABEL maintainer="Lanjelin"
 ENV TITLE=OpenAudible
 
-RUN echo "Installing depencies" && \
+RUN echo "Installing dependencies" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libgtk-3-bin ca-certificates wget libswt-webkit-gtk-4-jni xdg-utils libnss3-dev && \

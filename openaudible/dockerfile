@@ -7,18 +7,12 @@ RUN echo "Installing depencies" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libgtk-3-bin ca-certificates wget libswt-webkit-gtk-4-jni xdg-utils libnss3-dev && \
-    echo "Installing OpenAudible" && \
-    wget -q https://openaudible.org/latest/OpenAudible_x86_64.sh -O openaudible_installer.sh  && \
-    sh ./openaudible_installer.sh -q -overwrite -dir /usr/local/OpenAudible && \
+    wget -q https://raw.githubusercontent.com/Lanjelin/docker-tinker/main/openaudible/58-openaudibleinstall -O /etc/cont-init.d/58-openaudibleinstall && \
     echo "OpenAudible" > /defaults/autostart && \
     echo "Cleaning up" && \
-    apt remove -y xfce4-panel firefox wget && \
+    apt remove -y xfce4-panel firefox && \
     apt-get clean && \
-    rm openaudible_installer.sh && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# ports and volumes
 EXPOSE 3000
-VOLUME /config
-
-
+VOLUME /config/OpenAudible

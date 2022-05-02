@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+  fireflyiii:
+    image: fireflyiii/core:latest
+    container_name: fireflyiii
+    volumes:
+      - /fireflyiii/upload:/var/www/html/storage/upload
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_KEY=fnP8kWjFGceZD4nuIoTGk1NBOXtBMLj0
+      - DB_HOST=firedb
+      - DB_PORT=3306
+      - DB_CONNECTION=mysql
+      - DB_DATABASE=fireflyiii
+      - DB_USERNAME=fireflyusr
+      - DB_PASSWORD=fireflypwd
+      - APP_URL=https://firefly.example.com
+      - TRUSTED_PROXIES=**
+    depends_on:
+      - firedb
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.firefly.entrypoints=websecure"
+      - "traefik.http.routers.firefly.rule=Host(`firefly.example.com`)"
+      - "traefik.http.routers.firefly.service=firefly"
+      - "traefik.http.services.firefly.loadbalancer.server.port=8080"
+      - "traefik.http.services.firefly.loadbalancer.server.scheme=http"
+    networks:
+      - traefik
+      
+  firedb:
+    image: lscr.io/linuxserver/mariadb
+    container_name: firedb
+    volumes:
+      - /fireflyiii/db:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MYSQL_ROOT_PASSWORD=firedb_fireadm_pwd
+      - TZ=Europe/Oslo
+      - MYSQL_DATABASE=fireflyiii
+      - MYSQL_USER=fireflyusr
+      - MYSQL_PASSWORD=fireflypwd
+    restart: unless-stopped
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

@@ -1,0 +1,51 @@
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntujammy
+
+LABEL maintainer="lanjelin"
+
+ENV TITLE=Feather-Wallet
+ENV VERSION=2.4.5
+ 
+RUN \
+  echo "**** install packages ****" && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+    wget \
+    unzip \
+    libxkbcommon-x11-0 \
+    libxcb-cursor0 \
+    libxcb-icccm4 \
+    libxcb-keysyms1 \
+    libxcb-randr0 && \
+  echo "**** install feather ****" && \
+  wget -q https://featherwallet.org/files/releases/linux/feather-$VERSION-linux.zip -O /tmp/feather.zip && \
+  wget -q https://raw.githubusercontent.com/feather-wallet/feather/master/utils/pubkeys/featherwallet.asc -O /tmp/featherwallet.asc && \
+  wget -q https://featherwallet.org/files/releases/hashes-$VERSION.txt -O /tmp/hashes.txt && \
+  export GNUPGHOME="$(mktemp -d)" && \
+  gpg --import /tmp/featherwallet.asc && \
+  if ! gpg --batch --quiet --verify /tmp/hashes.txt; then \
+    echo "File signature mismatch"; \
+    exit 1; \
+  fi && \
+  sha256=$(sha256sum /tmp/feather.zip) && \
+  if ! grep --quiet "${sha256%% *}" /tmp/hashes.txt; then \
+    echo "SHA256 mismatch"; \
+    exit 1; \
+  fi && \
+  unzip /tmp/feather.zip -d /tmp/ && \
+  mkdir -p /app && \
+  mv /tmp/feather-* /app/feather && \
+  find /app -perm 700 -exec chmod 755 {} + && \
+  find /app -perm 600 -exec chmod 644 {} + && \
+  sed -i 's|</applications>|  <application title="Feather-Wallet" type="normal">\n    <maximized>no</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml && \
+  echo "**** cleanup ****" && \
+  rm -rf \
+    /tmp/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*
+# add local files
+COPY /root /
+
+# ports and volumes
+EXPOSE 3000 3001
+
+VOLUME /config

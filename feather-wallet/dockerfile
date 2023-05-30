@@ -3,7 +3,7 @@ FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntujammy
 LABEL maintainer="lanjelin"
 
 ENV TITLE=Feather-Wallet
-ENV VERSION=2.4.5
+ENV VERSION=2.4.9
  
 RUN \
   echo "**** install packages ****" && \
